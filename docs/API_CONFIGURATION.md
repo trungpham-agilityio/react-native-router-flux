@@ -84,11 +84,11 @@ that's why it's just a bunch of constants to mask the actual values.
 Defines how the new screen is added to the navigator stack. One of push, modal, actionSheet, replace, switch, reset transitionToTop. Default is 'push'.
 And every `Scene.type` string literal has a mapped constant in ActionConst, it is recommended to always use constant.
 
-`replace`: tells navigator to replace current route with new route.  
-`actionSheet`: shows Action Sheet popup, you must pass callback as callback function.  
-`modal`: type inserts its 'component' into route stack after navigator component. It could be used for popup alerts as well for various needed processes before any navigator transitions (like login auth process). it could be dismissed by using Actions.dismiss().   
-`switch`: is used for tab screens.  
-`reset`: is similar to `replace` except it unmounts the componets in the navigator stack.  
+`replace`: tells navigator to replace current route with new route.
+`actionSheet`: shows Action Sheet popup, you must pass callback as callback function.
+`modal`: type inserts its 'component' into route stack after navigator component. It could be used for popup alerts as well for various needed processes before any navigator transitions (like login auth process). it could be dismissed by using Actions.dismiss().
+`switch`: is used for tab screens.
+`reset`: is similar to `replace` except it unmounts the componets in the navigator stack.
 `transitionToTop`: will reset router stack ['route.name'] and with animation, if route has sceneConfig. eg `<Route name="login" schema="modal" component={Login} type="transitionToTop" />`
 
 
@@ -131,6 +131,7 @@ And every `Scene.type` string literal has a mapped constant in ActionConst, it i
 | hideNavBar | `bool` | false | hides the navigation bar for this scene and any following scenes until explicitly reversed |
 | navigationBarStyle | [`View style`](https://facebook.github.io/react-native/docs/view.html#style) |  | optional style override for the navigation bar |
 | navigationBarBackgroundImage | [`Image source`](https://facebook.github.io/react-native/docs/image.html#source) |  | optional background image for the navigation bar |
+| navigationBarBorderImage | [`Image source`](https://facebook.github.io/react-native/docs/image.html#source) |  | optional border bottom image for navigation bar |
 | navBar | `React.Component` | | optional custom NavBar for the scene. Check built-in NavBar of the component for reference |
 | drawerImage | [`Image source`](https://facebook.github.io/react-native/docs/image.html#source) | `require('./menu_burger.png')` | Simple way to override the drawerImage in the navBar |
 

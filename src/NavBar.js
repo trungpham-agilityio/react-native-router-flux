@@ -34,11 +34,13 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Dimensions
 } from 'react-native';
 import Actions from './Actions';
 import _drawerImage from './menu_burger.png';
 import _backButtonImage from './back_chevron.png';
 
+const { width, height } = Dimensions.get('window')
 const styles = StyleSheet.create({
   title: {
     textAlign: 'center',
@@ -75,11 +77,23 @@ const styles = StyleSheet.create({
     }),
     right: 0,
     left: 0,
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#828287',
     position: 'absolute',
   },
+  borderBottomWidth: {
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#828287',
+  },
+  borderBottom: {
+    width: width,
+    height: 2,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 9999
+  },
   backButton: {
+    width: 100,
     height: 37,
     position: 'absolute',
     ...Platform.select({
@@ -95,6 +109,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   rightButton: {
+    width: 100,
     height: 37,
     position: 'absolute',
     ...Platform.select({
@@ -109,6 +124,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   leftButton: {
+    width: 100,
     height: 37,
     position: 'absolute',
     ...Platform.select({
@@ -142,6 +158,9 @@ const styles = StyleSheet.create({
     width: 13,
     height: 21,
   },
+  rightButtonIconStyle: {
+
+  },
   defaultImageStyle: {
     height: 24,
     resizeMode: 'contain',
@@ -164,6 +183,7 @@ const propTypes = {
   position: PropTypes.object,
   navigationBarStyle: View.propTypes.style,
   navigationBarBackgroundImage: Image.propTypes.source,
+  navigationBarBorderImage: Image.propTypes.source,
   renderTitle: PropTypes.any,
 };
 
@@ -220,7 +240,7 @@ class NavBar extends React.Component {
         />
       );
     }
-    const buttonImage = childState.backButtonImage ||
+    let buttonImage = childState.backButtonImage ||
       state.backButtonImage || this.props.backButtonImage;
     let onPress = childState.onBack || childState.component.onBack;
     if (onPress) {
@@ -229,10 +249,10 @@ class NavBar extends React.Component {
       onPress = Actions.pop;
     }
 
-    const text = childState.backTitle ?
-      (<Text style={textButtonStyle}>
+    let text = childState.backTitle ?
+      <Text style={textButtonStyle}>
         {childState.backTitle}
-      </Text>)
+      </Text>
       : null;
 
     return (
@@ -310,11 +330,11 @@ class NavBar extends React.Component {
           </TouchableOpacity>
         );
       }
-      if ((!!state.onRight ^ !!(typeof (rightTitle) !== 'undefined'
-        || typeof (state.rightButtonImage) !== 'undefined'))) {
+      if ((!!state.onRight ^ !!(typeof(rightTitle) !== 'undefined'
+        || typeof(state.rightButtonImage) !== 'undefined'))) {
         console.warn(
           `Both onRight and rightTitle/rightButtonImage
-            must be specified for the scene: ${state.name}`,
+            must be specified for the scene: ${state.name}`
         );
       }
       return null;
@@ -396,7 +416,7 @@ class NavBar extends React.Component {
       if ((!!state.onLeft ^ !!(leftTitle || buttonImage))) {
         console.warn(
           `Both onLeft and leftTitle/leftButtonImage
-            must be specified for the scene: ${state.name}`,
+            must be specified for the scene: ${state.name}`
         );
       }
       return null;
@@ -409,7 +429,7 @@ class NavBar extends React.Component {
     if (title === undefined && childState.component && childState.component.title) {
       title = childState.component.title;
     }
-    if (typeof (title) === 'function') {
+    if (typeof(title) === 'function') {
       title = title(childState);
     }
     return (
@@ -454,7 +474,7 @@ class NavBar extends React.Component {
   render() {
     let state = this.props.navigationState;
     let selected = state.children[state.index];
-    while ({}.hasOwnProperty.call(selected, 'children')) {
+    while (selected.hasOwnProperty('children')) {
       state = selected;
       selected = selected.children[selected.index];
     }
@@ -462,7 +482,7 @@ class NavBar extends React.Component {
 
     const wrapByStyle = (component, wrapStyle) => {
       if (!component) { return null; }
-      return props => <View style={wrapStyle}>{component(props)}</View>;
+      return (props) => <View style={wrapStyle}>{component(props)}</View>;
     };
 
     const leftButtonStyle = [styles.leftButton, { alignItems: 'flex-start' }];
@@ -482,6 +502,8 @@ class NavBar extends React.Component {
       this.props.renderTitle;
     const navigationBarBackgroundImage = this.props.navigationBarBackgroundImage ||
       state.navigationBarBackgroundImage;
+    const navigationBarBorderImage = this.props.navigationBarBorderImage ||
+      state.navigationBarBorderImage;
     const contents = (
       <View>
         {renderTitle ? renderTitle(navProps) : state.children.map(this.renderTitle, this)}
@@ -496,6 +518,7 @@ class NavBar extends React.Component {
           this.props.navigationBarStyle,
           state.navigationBarStyle,
           selected.navigationBarStyle,
+          !navigationBarBorderImage && styles.borderBottomWidth
         ]}
       >
         {navigationBarBackgroundImage ? (
@@ -503,6 +526,7 @@ class NavBar extends React.Component {
             {contents}
           </Image>
         ) : contents}
+        { navigationBarBorderImage && <Image source={navigationBarBorderImage} style={styles.borderBottom} /> }
       </Animated.View>
     );
   }
